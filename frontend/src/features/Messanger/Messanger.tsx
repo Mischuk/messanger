@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { StoreContext } from '../../App';
 import { Button } from '../../components/Button/Button';
 import { useHttp } from '../../hooks/useHttp';
-import { User } from '../../models';
 import { socket } from '../../socket';
 import './Messanger.styles.scss';
 
@@ -18,10 +18,11 @@ const getCurrentTime = (): string => {
     return `${hh}:${mm}`;
 };
 
-const Messanger = ({ user }: { user: User }) => {
+const Messanger = () => {
+    const { store } = useContext(StoreContext);
     const [inputValue, setInputValue] = useState('');
     const listRef = useRef<HTMLDivElement>(null);
-    const { loading, request } = useHttp();
+    const { request } = useHttp();
 
     const [data, setData] = useState<Message[]>([]);
 
@@ -50,7 +51,7 @@ const Messanger = ({ user }: { user: User }) => {
         if (!inputValue) return;
 
         const time = getCurrentTime();
-        const newMessage = { author: user.userName, time, message: inputValue };
+        const newMessage = { author: store.user.userName, time, message: inputValue };
 
         socket.emit('sendMessage', { newMessage });
 

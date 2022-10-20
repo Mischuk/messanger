@@ -1,0 +1,8 @@
+@import '../../assets/variables.scss';
+
+.Layout {
+    height: calc(100% - $header);
+    min-width: 100%;
+    max-width: 100%;
+    margin-top: auto;
+}

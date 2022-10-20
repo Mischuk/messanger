@@ -13,7 +13,7 @@ export const useHttp = () => {
                 headers['Content-Type'] = 'application/json';
             }
 
-            const response = await fetch(`http://192.168.101.103:8000/${url}`, { method, body, headers });
+            const response = await fetch(`http://127.0.0.1:8000/${url}`, { method, body, headers });
             const data = await response.json();
 
             if (!response.ok) {

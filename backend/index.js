@@ -3,12 +3,14 @@ const path = require('path');
 const cors = require('cors');
 const app = express();
 const server = require('http').createServer(app);
+
 const io = require('socket.io')(server, {
     cors: {
-        origin: ['http://localhost:3000', 'http://192.168.101.103:3000'],
+        origin: ['http://127.0.0.1:3000', 'http://192.168.101.103:3000'],
         methods: ['GET', 'POST'],
     },
 });
+
 const { updateFile, readFile } = require('./core/fs');
 
 const { PORT } = require('./core/constants');

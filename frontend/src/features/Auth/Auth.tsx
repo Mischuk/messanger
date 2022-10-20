@@ -1,19 +1,32 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { StoreContext } from '../../App';
 import { Button } from '../../components/Button/Button';
 import { useHttp } from '../../hooks/useHttp';
+import { Routes } from '../../routes';
+import { socket } from '../../socket';
 import './Auth.styles.scss';
+import { useAuth } from './useAuth';
 
-const Auth = ({ onSuccess }: { onSuccess: (data: { userId: string; userName: string }) => void }) => {
+const Auth = () => {
+    let navigate = useNavigate();
+    const { signin } = useAuth();
     const [error] = useState(false);
     const { request } = useHttp();
     const [user, setUser] = useState('');
+    const { updateStore } = useContext(StoreContext);
 
     const handleSignIn = async () => {
         try {
             const data = await request('api/auth/signin', 'POST', { name: user });
 
             if (data) {
-                onSuccess(data);
+                updateStore('user', data);
+                socket.emit('joinClient', data);
+
+                signin(user, () => {
+                    navigate(Routes.Messanger, { replace: true });
+                });
             }
         } catch (error) {}
     };

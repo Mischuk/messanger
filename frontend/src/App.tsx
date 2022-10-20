@@ -1,22 +1,34 @@
-import { useState } from 'react';
+import { createContext, useCallback, useState } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import './App.scss';
-import { Auth } from './features/Auth/Auth';
-import { Messanger } from './features/Messanger/Messanger';
-import { User } from './models';
-import { socket } from './socket';
+import { Header } from './components/Header/Header';
+import { AuthProvider } from './features/Auth/Auth.context';
+import { RoutesContainer } from './routes/RoutesContainer';
+
+export const StoreContext = createContext({ store: {}, updateStore: () => {} } as any);
 
 function App() {
-    const [currentUser, setCurrentUser] = useState({ userId: '', userName: '' });
+    const [store, setStore] = useState({
+        user: { userId: '', userName: '' },
+    });
 
-    const signIn = (data: User) => {
-        setCurrentUser(data);
-        socket.emit('joinClient', data);
-    };
+    const updateStore = useCallback((key: string, value: any) => {
+        setStore((prevState) => ({
+            ...prevState,
+            [key]: value,
+        }));
+    }, []);
 
     return (
         <div className='App'>
-            {!currentUser.userId && <Auth onSuccess={signIn} />}
-            {currentUser.userId && <Messanger user={currentUser} />}
+            <StoreContext.Provider value={{ store, updateStore }}>
+                <BrowserRouter>
+                    <AuthProvider>
+                        <Header />
+                        <RoutesContainer />
+                    </AuthProvider>
+                </BrowserRouter>
+            </StoreContext.Provider>
         </div>
     );
 }

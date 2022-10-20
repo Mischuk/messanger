@@ -1,3 +1,3 @@
 import { io } from 'socket.io-client';
-const socket = io('http://192.168.101.103:8000');
+const socket = io('http://127.0.0.1:8000');
 export { socket };

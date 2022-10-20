@@ -1,0 +1,11 @@
+@import '../../assets/variables.scss';
+
+.Header {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: $header;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(black, 0.25);
+    background: rgba(white, 0.5);
+}
