@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Button } from '../../components/Button/Button';
 import { useHttp } from '../../hooks/useHttp';
 import { User } from '../../models';
 import { socket } from '../../socket';
@@ -100,8 +101,8 @@ const Messanger = ({ user }: { user: User }) => {
                     onChange={handleChangeMessage}
                     value={inputValue}
                 />
-                <div className='Messanger__send' onClick={handleSubmit}>
-                    send
+                <div className='Messanger__send'>
+                    <Button onClick={handleSubmit}>Send</Button>
                 </div>
             </div>
         </div>

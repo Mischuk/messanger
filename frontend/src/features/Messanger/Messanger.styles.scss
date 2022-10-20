@@ -42,18 +42,8 @@
 
     &__send {
         width: 100px;
-        background: orange;
-        color: white;
+
         height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        text-transform: uppercase;
-        cursor: pointer;
-        &:hover {
-            background: darken(orange, 2%);
-        }
     }
 
     &__item {

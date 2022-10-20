@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Button } from '../../components/Button/Button';
 import { useHttp } from '../../hooks/useHttp';
 import './Auth.styles.scss';
 
@@ -39,8 +40,8 @@ const Auth = ({ onSuccess }: { onSuccess: (data: { userId: string; userName: str
                     onChange={handleChangeUsername}
                     onKeyUp={handleEnter}
                 />
-                <div className='Auth__submit' onClick={handleSignIn}>
-                    Enter
+                <div className='Auth__submit'>
+                    <Button onClick={handleSignIn}>Ok</Button>
                 </div>
             </div>
         </div>
