@@ -19,6 +19,7 @@ app.use(express.json({ extended: true }));
 app.use(cors());
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/messages', require('./routes/messages.routes'));
+app.use('/api/citySearch', require('./routes/citySearch.routes'));
 
 if (process.env.NODE_ENV === 'production') {
     app.use('/', express.static(path.join(__dirname, 'client', 'build')));

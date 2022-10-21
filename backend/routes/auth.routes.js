@@ -19,7 +19,9 @@ router.post('/signin', [body('name').isLength({ min: 1 }).withMessage('What is y
         }
         const { name } = req.body;
         const userId = getUniqueID();
-        res.json({ userId, userName: name });
+        setTimeout(() => {
+            res.json({ userId, userName: name });
+        }, 2000);
     } catch (e) {
         res.status(STATUS.CLIENT_ERROR).json({ message: 'Something went wrong. Try again.' });
     }

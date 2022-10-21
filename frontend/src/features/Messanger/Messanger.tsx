@@ -29,7 +29,6 @@ const Messanger = () => {
     const getMessages = async () => {
         try {
             const data = await request('api/messages', 'GET');
-            console.log(`data: `, data);
 
             if (data) {
                 setData(data.data.messages);

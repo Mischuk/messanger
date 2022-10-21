@@ -1,4 +1,4 @@
-- useQuery + axios
-- Auth (remove fake auth + localStorage + name/password + jwt token)
-- MobX as state managment for client
-- Socket.io as hooks
+-   useQuery + axios (cancel requests)
+-   Auth (remove fake auth + localStorage + name/password + jwt token)
+-   MobX as state managment for client
+-   Socket.io as hooks
