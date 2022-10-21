@@ -16,6 +16,7 @@
     user-select: none;
     border: none;
     appearance: none;
+    outline: none;
 
     &:hover {
         background: darken(orange, 2%);

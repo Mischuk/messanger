@@ -12,6 +12,7 @@
         height: calc(100% - 60px);
         background: rgba(orange, 0.1);
         padding: 24px;
+        padding-top: 64px;
         overflow: auto;
     }
 
@@ -23,6 +24,7 @@
         height: 60px;
 
         margin-top: auto;
+        box-shadow: 0 -4px 8px rgba(black, 0.25);
     }
 
     &__input {
@@ -32,9 +34,18 @@
         border: none;
         appearance: none;
         padding: 0 24px;
-        border-top: 1px solid rgba(black, 0.25);
         font-size: 16px;
         font-family: $font;
+        background: rgba(white, 0.5);
+        transition: background-color 300ms ease-in-out;
+
+        &:hover {
+            background: rgba(white, 0.6);
+        }
+
+        &:focus {
+            background: rgba(white, 0.7);
+        }
     }
 
     &__send {
