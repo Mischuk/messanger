@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { Routes } from '../../routes';
 import './AuthStatus.styles.scss';
-import { useAuth } from './useAuth';
+import { useAuthContext } from './useAuthContext';
 
 const AuthStatus = () => {
-    let { user, signout } = useAuth();
+    let { user, signout } = useAuthContext();
     let navigate = useNavigate();
 
     const handleSignOut = () => {

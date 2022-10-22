@@ -3,6 +3,7 @@ import { StoreContext } from '../../App';
 import { Button } from '../../components/Button/Button';
 import { useHttp } from '../../hooks/useHttp';
 import { socket } from '../../socket';
+import WS from '../../utils/ws.events';
 import './Messanger.styles.scss';
 
 interface Message {
@@ -41,7 +42,7 @@ const Messanger = () => {
     }, []);
 
     useEffect(() => {
-        socket.on('newMessageFromServer', ({ newMessage }) => {
+        socket.on(WS.FS_NEW_MESSAGE, ({ newMessage }) => {
             setData((prev) => [...prev, newMessage]);
         });
     }, []);
@@ -50,9 +51,13 @@ const Messanger = () => {
         if (!inputValue) return;
 
         const time = getCurrentTime();
-        const newMessage = { author: store.user.userName, time, message: inputValue };
+        const newMessage = {
+            author: store.user.userName,
+            time,
+            message: inputValue,
+        };
 
-        socket.emit('sendMessage', { newMessage });
+        socket.emit(WS.FC_NEW_MESSAGE, { newMessage });
 
         setInputValue('');
     };
@@ -83,10 +88,16 @@ const Messanger = () => {
                         <div className='Messanger__item' key={idx}>
                             <div className='Messanger__item-wrapper'>
                                 <div className='Messanger__header'>
-                                    <div className='Messanger__author'>{msg.author}</div>
-                                    <div className='Messanger__time'>{msg.time}</div>
+                                    <div className='Messanger__author'>
+                                        {msg.author}
+                                    </div>
+                                    <div className='Messanger__time'>
+                                        {msg.time}
+                                    </div>
                                 </div>
-                                <div className='Messanger__message'>{msg.message}</div>
+                                <div className='Messanger__message'>
+                                    {msg.message}
+                                </div>
                             </div>
                         </div>
                     );

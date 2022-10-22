@@ -1,7 +1,20 @@
 import axios from 'axios';
 
-const instance = axios.create({
+const axiosInstance = axios.create({
     baseURL: `http://127.0.0.1:8000/api`,
 });
 
-export { instance as api };
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.code === 'ERR_CANCELED') {
+            return Promise.resolve({ status: 499 });
+        } else {
+            return Promise.reject(
+                (error.response && error.response.data) || 'Error'
+            );
+        }
+    }
+);
+
+export { axiosInstance as api };

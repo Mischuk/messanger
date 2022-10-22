@@ -3,6 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const app = express();
 const server = require('http').createServer(app);
+const WS = require('./core/ws.events');
 
 const io = require('socket.io')(server, {
     cors: {
@@ -14,6 +15,7 @@ const io = require('socket.io')(server, {
 const { updateFile, readFile } = require('./core/fs');
 
 const { PORT } = require('./core/constants');
+const FILENAME_MESSAGES = 'messages.json';
 
 app.use(express.json({ extended: true }));
 app.use(cors());
@@ -24,52 +26,46 @@ app.use('/api/citySearch', require('./routes/citySearch.routes'));
 if (process.env.NODE_ENV === 'production') {
     app.use('/', express.static(path.join(__dirname, 'client', 'build')));
 
-    app.get('*', (req, res) => {
+    app.get('*', (_, res) => {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     });
 }
 
 async function start() {
     try {
-        server.listen(PORT, () => {
-            console.log('Server listening at port %d', PORT);
-        });
-
         const clients = [];
 
-        io.on('connection', (socket) => {
-            console.log('connection', socket.id);
+        server.listen(PORT);
 
-            socket.on('joinClient', async (data) => {
-                const newUser = { name: data.userName, id: socket.id };
-                if (!clients.find(({ name }) => name === data.userName)) {
-                    clients.push(newUser);
+        io.on(WS.CONNECTION, (socket) => {
+            socket.on(WS.FC_CLIENT_CONNECT, async ({ userName }) => {
+                const isUserConnected = clients.find(
+                    ({ name }) => name === userName
+                );
+
+                if (!isUserConnected) {
+                    clients.push({
+                        name: userName,
+                        id: socket.id,
+                    });
                 }
 
-                // io.emit('joinServer', { clients });
+                io.emit(WS.FS_CLIENT_CONNECT, { clients });
             });
 
-            socket.on('sendMessage', async (data) => {
-                const { newMessage } = data;
-                const filedata = await readFile('messages.json');
-                filedata.data.messages.push(newMessage);
-                await updateFile('messages.json', filedata);
-                io.emit('newMessageFromServer', data);
+            socket.on(WS.FC_NEW_MESSAGE, async (data) => {
+                const messages = await readFile(FILENAME_MESSAGES);
+                messages.data.messages.push(data.newMessage);
+                await updateFile(FILENAME_MESSAGES, messages);
+                io.emit(WS.FS_NEW_MESSAGE, data);
             });
 
-            socket.on('leaveClient', async () => {
-                const idx = clients.findIndex((el) => el.id === socket.id);
-                clients.splice(idx, 1);
-                socket.broadcast.emit('leaveServer', { clients });
-            });
-
-            socket.on('disconnect', async () => {
-                console.log('disconnect', socket.id);
+            socket.on(WS.DISCONNECT, async () => {
                 const idx = clients.findIndex((el) => el.id === socket.id);
 
                 if (idx >= 0) {
                     clients.splice(idx, 1);
-                    socket.broadcast.emit('leaveServer', { clients });
+                    socket.broadcast.emit(WS.FS_CLIENT_DISCONNECT, { clients });
                 }
             });
         });

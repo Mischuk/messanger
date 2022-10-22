@@ -1,9 +1,9 @@
 import { AuthStatus } from '../../features/Auth/AuthStatus';
-import { useAuth } from '../../features/Auth/useAuth';
+import { useAuthContext } from '../../features/Auth/useAuthContext';
 import './Header.styles.scss';
 
 const Header = () => {
-    let { user } = useAuth();
+    let { user } = useAuthContext();
 
     if (!user) return null;
 

@@ -1,14 +1,31 @@
 import { useContext, useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../App';
+import { Button } from '../../components/Button/Button';
 import { Routes } from '../../routes';
 import { socket } from '../../socket';
 import { api } from '../../utils/axiosInstance';
+import { AbortControl } from '../../utils/types';
 import './Auth.styles.scss';
-import { useAuth } from './useAuth';
+import { useAuthContext } from './useAuthContext';
 
-let signInController: AbortController | null = null;
+let signInController: AbortControl = null;
+
+// let abortableControllerInstance: AbortControl = null;
+// const abortableRequest = (fn: Function) => {
+//     if (abortableControllerInstance) {
+//         abortableControllerInstance.abort();
+//     }
+//     abortableControllerInstance = new AbortController();
+//     return function (this: any, ...args: any[]) {
+//         setTimeout(
+//             () => fn.apply(this, [...args, abortableControllerInstance]),
+//             0
+//         );
+//     };
+// };
+
 const requestSignIn = async (data: { name: string }) => {
     if (signInController) {
         signInController.abort();
@@ -25,19 +42,15 @@ const requestSignIn = async (data: { name: string }) => {
     }
 };
 
-const useUserSession = () => {
+const useAuth = () => {
     let navigate = useNavigate();
     const { updateStore } = useContext(StoreContext);
-    const { signin } = useAuth();
-    const queryClient = useQueryClient();
+    const { signin } = useAuthContext();
     const signIn = useMutation(
         'signInLabel',
 
         requestSignIn,
         {
-            onMutate: () => {
-                console.log(queryClient);
-            },
             onSuccess: (data?: any) => {
                 if (!data) return;
                 updateStore('user', data);
@@ -46,9 +59,6 @@ const useUserSession = () => {
                 signin(data.userName, () => {
                     navigate(Routes.Messanger, { replace: true });
                 });
-            },
-            onError: () => {
-                console.log('errr');
             },
         }
     );
@@ -59,7 +69,7 @@ const useUserSession = () => {
 const Auth = () => {
     const [error] = useState(false);
     const [user, setUser] = useState('');
-    const { signIn } = useUserSession();
+    const { signIn } = useAuth();
 
     const handleSignIn = () => signIn.mutate({ name: user });
 
@@ -72,43 +82,39 @@ const Auth = () => {
             handleSignIn();
         }
     };
-    const search = useMutation('search', async (val) => {
-        const response = await api.get(`/citySearch?name=${val}`);
-        return response;
-    });
 
-    const handleSearch = (e: any) => {
-        const val = e.target.value;
-        if (!val) return;
-
-        search.mutate(val);
+    const closeRequest = () => {
+        if (signInController) {
+            signInController.abort();
+            signIn.reset();
+        }
     };
 
     return (
         <div className='Auth'>
-            {error && <div className='Auth__error'>This name is already exist</div>}
+            {error && (
+                <div className='Auth__error'>This name is already exist</div>
+            )}
 
             <div className='Auth__form'>
-                {/* <input
+                <input
                     type='text'
                     className='Auth__input'
                     placeholder='Your name...'
                     spellCheck={false}
                     onChange={handleChangeUsername}
                     onKeyUp={handleEnter}
-                /> */}
-                <input
-                    type='text'
-                    className='Auth__input'
-                    placeholder='Your cities...'
-                    spellCheck={false}
-                    onChange={handleSearch}
                 />
-                {/* <div className='Auth__submit'>
-                    <Button onClick={handleSignIn}>Ok</Button>
-                </div> */}
 
-                {signIn.isLoading && <div className='Auth__loader'>Wait for a moment...</div>}
+                <div className='Auth__submit'>
+                    <Button onClick={handleSignIn}>Ok</Button>
+                </div>
+
+                {signIn.isLoading && (
+                    <div className='Auth__loader' onClick={closeRequest}>
+                        Wait for a moment...
+                    </div>
+                )}
             </div>
         </div>
     );
