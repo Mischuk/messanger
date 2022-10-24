@@ -14,9 +14,11 @@ router.get('/', async (req, res) => {
         const msgs = await getMessagesData();
         setTimeout(() => {
             res.status(STATUS.SUCCESSFUL).send(msgs);
-        }, 2000);
+        }, 500);
     } catch (error) {
-        res.status(STATUS.CLIENT_ERROR).send({ message: error.message || 'Something went wrong. Try again.' });
+        res.status(STATUS.CLIENT_ERROR).send({
+            message: error.message || 'Something went wrong. Try again.',
+        });
     }
 });
 

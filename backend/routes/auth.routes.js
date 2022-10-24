@@ -8,23 +8,29 @@ const router = Router();
 /*
     LOGIN
 */
-router.post('/signin', [body('name').isLength({ min: 1 }).withMessage('What is your name?')], async (req, res) => {
-    try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(STATUS.CLIENT_ERROR).json({
-                errors: errors.array(),
-                message: 'Wrong data for sign in',
+router.post(
+    '/signin',
+    [body('name').isLength({ min: 1 }).withMessage('What is your name?')],
+    async (req, res) => {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(STATUS.CLIENT_ERROR).json({
+                    errors: errors.array(),
+                    message: 'Wrong data for sign in',
+                });
+            }
+            const { name } = req.body;
+            const userId = getUniqueID();
+            setTimeout(() => {
+                res.json({ userId, userName: name });
+            }, 500);
+        } catch (e) {
+            res.status(STATUS.CLIENT_ERROR).json({
+                message: 'Something went wrong. Try again.',
             });
         }
-        const { name } = req.body;
-        const userId = getUniqueID();
-        setTimeout(() => {
-            res.json({ userId, userName: name });
-        }, 2000);
-    } catch (e) {
-        res.status(STATUS.CLIENT_ERROR).json({ message: 'Something went wrong. Try again.' });
     }
-});
+);
 
 module.exports = router;
