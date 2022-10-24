@@ -1,16 +1,9 @@
-import { useContext, useState } from 'react';
-import { useMutation } from 'react-query';
-import { useNavigate } from 'react-router-dom';
-import { StoreContext } from '../../App';
+import { useState } from 'react';
 import { Button } from '../../components/Button/Button';
-import { Routes } from '../../routes';
-import { socket } from '../../socket';
-import { api } from '../../utils/axiosInstance';
-import { AbortControl } from '../../utils/types';
 import './Auth.styles.scss';
-import { useAuthContext } from './useAuthContext';
+import { useAuthy } from './useAuthy';
 
-let signInController: AbortControl = null;
+// let signInController: AbortControl = null;
 
 // let abortableControllerInstance: AbortControl = null;
 // const abortableRequest = (fn: Function) => {
@@ -25,7 +18,7 @@ let signInController: AbortControl = null;
 //         );
 //     };
 // };
-
+/*
 const requestSignIn = async (data: { name: string }) => {
     if (signInController) {
         signInController.abort();
@@ -65,11 +58,18 @@ const useAuth = () => {
 
     return { signIn };
 };
+*/
+
+////////////
+
+////////////
 
 const Auth = () => {
     const [error] = useState(false);
     const [user, setUser] = useState('');
-    const { signIn } = useAuth();
+    // const { signIn } = useAuth();
+
+    const signIn = useAuthy();
 
     const handleSignIn = () => signIn.mutate({ name: user });
 
@@ -84,10 +84,8 @@ const Auth = () => {
     };
 
     const closeRequest = () => {
-        if (signInController) {
-            signInController.abort();
-            signIn.reset();
-        }
+        signIn.abort();
+        // signIn.reset();
     };
 
     return (
@@ -95,7 +93,9 @@ const Auth = () => {
             {error && (
                 <div className='Auth__error'>This name is already exist</div>
             )}
-
+            <div>
+                <Button onClick={closeRequest}>Cancel request</Button>
+            </div>
             <div className='Auth__form'>
                 <input
                     type='text'
@@ -111,9 +111,7 @@ const Auth = () => {
                 </div>
 
                 {signIn.isLoading && (
-                    <div className='Auth__loader' onClick={closeRequest}>
-                        Wait for a moment...
-                    </div>
+                    <div className='Auth__loader'>Wait for a moment...</div>
                 )}
             </div>
         </div>
