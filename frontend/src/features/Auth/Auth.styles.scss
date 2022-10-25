@@ -11,10 +11,22 @@
     &__error {
         margin-bottom: 12px;
         color: white;
-        background: rgba(red, 0.8);
+        background: rgba(red, 0.7);
         padding: 4px 12px;
         cursor: default;
         user-select: none;
+        position: absolute;
+        left: 0;
+        top: -50%;
+        width: 100%;
+        height: 50%;
+        overflow: hidden;
+        margin-top: -12px;
+        border-radius: 4px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
     }
 
     &__form {
@@ -23,12 +35,35 @@
         height: 60px;
         max-width: 90%;
         width: 90%;
-        background: rgba(white, 0.5);
-        transition: background-color 300ms ease-in-out;
-
         box-shadow: 2px 2px 6px rgba(black, 0.2);
         border-radius: 6px;
-        overflow: hidden;
+    }
+
+    &__column {
+        position: relative;
+        height: 100%;
+        flex: 1;
+
+        & + & {
+            border-left: 1px solid rgba(black, 0.2);
+        }
+    }
+
+    &__input {
+        background: rgba(white, 0.5);
+        transition: background-color 300ms ease-in-out;
+        height: 100%;
+        width: 100%;
+        outline: none;
+        appearance: none;
+        border: none;
+        padding-left: 24px;
+        padding-right: 24px;
+        font-weight: bold;
+        font-size: 16px;
+        letter-spacing: 1px;
+        font-family: $font;
+
         &:hover {
             background: rgba(white, 0.6);
         }
@@ -36,22 +71,6 @@
         &:focus {
             background: rgba(white, 0.7);
         }
-    }
-
-    &__input {
-        height: 100%;
-        background: none;
-        outline: none;
-        appearance: none;
-        border: none;
-        flex: 1;
-        padding-left: 12px;
-        padding-right: 12px;
-        font-weight: bold;
-        font-size: 16px;
-        letter-spacing: 1px;
-        font-family: $font;
-        background: none;
     }
 
     &__loader {

@@ -1,8 +1,8 @@
 const { Router } = require('express');
-const { STATUS } = require('../core/constants');
+const { readFile } = require('../core/fs');
+const { STATUS, API_DELAY } = require('../core/constants');
 
 const router = Router();
-const { readFile } = require('../core/fs');
 
 const getMessagesData = async () => {
     const data = await readFile('messages.json');
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
         const msgs = await getMessagesData();
         setTimeout(() => {
             res.status(STATUS.SUCCESSFUL).send(msgs);
-        }, 500);
+        }, API_DELAY);
     } catch (error) {
         res.status(STATUS.CLIENT_ERROR).send({
             message: error.message || 'Something went wrong. Try again.',

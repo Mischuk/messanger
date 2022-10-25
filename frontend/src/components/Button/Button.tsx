@@ -6,11 +6,12 @@ const Button: React.FC<Props> = ({
     className = '',
     onClick = () => {},
     isLoading = false,
+    disabled = false,
 }) => {
     const classNames = clsx('Button', className);
 
     return (
-        <button className={classNames} onClick={onClick}>
+        <button className={classNames} onClick={onClick} disabled={disabled}>
             <span className={clsx('Button__text', { 'is-hidden': isLoading })}>
                 {children}
             </span>
@@ -33,6 +34,7 @@ interface Props {
     className?: string;
     children: React.ReactNode;
     isLoading?: boolean;
+    disabled?: boolean;
 }
 
 export { Button };

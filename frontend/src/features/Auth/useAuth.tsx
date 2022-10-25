@@ -2,10 +2,14 @@ import { useMutation } from 'react-query';
 import { API__USER_AUTH } from '../../models/api';
 import { api } from '../../utils/axiosInstance';
 import { abortController } from '../../utils/cancelableRequest';
+import { FieldsError } from '../../utils/enum';
+import { ErrorResponse } from '../../utils/types';
 
 let controller: AbortController;
 
-const auth = async (data: { name: string }): Promise<API__USER_AUTH> => {
+type AuthArgs = { name: string };
+
+const auth = async (data: AuthArgs): Promise<API__USER_AUTH> => {
     controller = abortController(controller);
 
     const { data: response } = await api.post<API__USER_AUTH>(
@@ -21,7 +25,11 @@ const auth = async (data: { name: string }): Promise<API__USER_AUTH> => {
 
 const useAuth = () => {
     return {
-        ...useMutation(auth),
+        ...useMutation<
+            API__USER_AUTH,
+            ErrorResponse<FieldsError.Name | FieldsError.Password>,
+            AuthArgs
+        >(auth),
         abort: () => controller.abort(),
     };
 };

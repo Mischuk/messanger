@@ -2,6 +2,7 @@ const config = require('config');
 
 const PORT = 8000;
 const SECRET_KEY = config.get('jwtSecret');
+const API_DELAY = 500;
 
 const STATUS = {
     INFO: 100,
