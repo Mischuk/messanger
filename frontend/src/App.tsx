@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './App.scss';
 import { Header } from './components/Header/Header';
 import { AuthProvider } from './features/Auth/Auth.context';
-import { User } from './models';
+import { iUser, User } from './models';
 import { RoutesContainer } from './routes/RoutesContainer';
 
 export const StoreContext = createContext({
@@ -15,12 +15,12 @@ export const StoreContext = createContext({
 const queryClient = new QueryClient();
 
 interface Store {
-    user: User;
+    user: iUser;
 }
 
 function App() {
     const [store, setStore] = useState<Store>({
-        user: { userId: '', userName: '' },
+        user: new User(),
     });
 
     const updateStore = useCallback((key: keyof Store, value: any) => {

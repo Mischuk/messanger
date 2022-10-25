@@ -1,19 +1,19 @@
 import { createContext, useState } from 'react';
-import { User } from '../../models';
+import { iUser, User } from '../../models';
 import { fakeAuthProvider } from '../../utils';
 
 interface AuthContextType {
-    user: User;
-    signin: (user: User, callback: VoidFunction) => void;
+    user: iUser;
+    signin: (user: iUser, callback: VoidFunction) => void;
     signout: (callback: VoidFunction) => void;
 }
 
 let AuthContext = createContext<AuthContextType>(null!);
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-    let [user, setUser] = useState<User>({ userName: '', userId: '' });
+    let [user, setUser] = useState<iUser>(new User());
 
-    let signin = (newUser: User, callback: VoidFunction) => {
+    let signin = (newUser: iUser, callback: VoidFunction) => {
         return fakeAuthProvider.signin(() => {
             setUser(newUser);
             callback();
