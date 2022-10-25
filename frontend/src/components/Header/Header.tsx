@@ -5,7 +5,7 @@ import './Header.styles.scss';
 const Header = () => {
     let { user } = useAuthContext();
 
-    if (!user) return null;
+    if (!user.userName) return null;
 
     return (
         <div className='Header'>

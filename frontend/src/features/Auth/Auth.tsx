@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { StoreContext } from '../../App';
 import { Button } from '../../components/Button/Button';
 import { Routes } from '../../routes';
 import './Auth.styles.scss';
@@ -10,6 +11,7 @@ const Auth = () => {
     const [user, setUser] = useState('');
     const signIn = useAuth();
     const { signin: fakeSignIn } = useAuthContext();
+    const { updateStore } = useContext(StoreContext);
     let navigate = useNavigate();
 
     const handleSignIn = () => {
@@ -17,7 +19,12 @@ const Auth = () => {
             { name: user },
             {
                 onSuccess: (data) => {
-                    fakeSignIn(data, () => {
+                    const user = {
+                        userName: data.userName,
+                        userId: data.userId,
+                    };
+                    updateStore('user', user);
+                    fakeSignIn(user, () => {
                         navigate(Routes.Messanger, { replace: true });
                     });
                 },

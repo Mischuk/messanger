@@ -15,7 +15,7 @@ function RequireAuth({ children }: { children: JSX.Element }) {
     let { user } = useAuthContext();
     let location = useLocation();
 
-    if (!user) {
+    if (!user.userName) {
         return <Navigate to={Routes.Auth} state={{ from: location }} replace />;
     }
 
