@@ -1,3 +1,4 @@
+import { action, makeAutoObservable, observable } from 'mobx';
 import { iUser, User } from '../models';
 
 interface iStore {
@@ -8,6 +9,15 @@ interface iStore {
 class Store implements iStore {
     user = new User();
     isAuthorised = false;
+
+    constructor() {
+        makeAutoObservable(this, {
+            user: observable,
+            isAuthorised: observable,
+            logIn: action.bound,
+            logOut: action.bound,
+        });
+    }
 
     public logIn(data: iUser) {
         this.user = new User(data);
@@ -21,6 +31,10 @@ class Store implements iStore {
 
     get getUser() {
         return this.user;
+    }
+
+    get getAuthorisedStatus() {
+        return this.isAuthorised;
     }
 }
 
