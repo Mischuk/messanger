@@ -34,3 +34,10 @@ router.post(
 );
 
 module.exports = router;
+
+/*
+    Add users.json
+    Each user has { id, username, password }
+    Add inputs to client: username, password
+    JWT Token
+*/
