@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Message } from '../../models';
+import { iMessage } from '../../models';
 import { API__MESSAGES } from '../../models/api';
 import { api } from '../../utils/axiosInstance';
 import { abortController } from '../../utils/cancelableRequest';
 
 let controller: AbortController;
 
-const getMessages = async (): Promise<Message[]> => {
+const getMessages = async (): Promise<iMessage[]> => {
     controller = abortController(controller);
 
     const { data: response } = await api.get<API__MESSAGES>('/messages', {
@@ -19,11 +19,13 @@ const getMessages = async (): Promise<Message[]> => {
 
 const useMessages = () => {
     const query = useQuery('getMessages', getMessages, {
-        initialData: [] as Message[],
+        initialData: [] as iMessage[],
     });
-    const [messages, setMessages] = useState<Message[]>([]);
-    const addMessages = (data: Message[]) =>
+    const [messages, setMessages] = useState<iMessage[]>([]);
+
+    const addMessages = (data: iMessage[]) =>
         setMessages((prev) => [...prev, ...data]);
+
     useEffect(() => {
         if (query.data) {
             setMessages(query.data);

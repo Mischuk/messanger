@@ -1,14 +1,15 @@
-import { useContext, useEffect, useRef, useState } from 'react';
-import { StoreContext } from '../../App';
+import { observer } from 'mobx-react-lite';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '../../components/Button/Button';
 import { socket } from '../../socket';
+import store from '../../store';
 import { getCurrentTime } from '../../utils/helpers';
 import WS from '../../utils/ws.events';
 import './Messanger.styles.scss';
 import { useMessages } from './useMessages';
 
 const Messanger = () => {
-    const { store } = useContext(StoreContext);
+    const { getUser } = store;
     const [inputValue, setInputValue] = useState('');
     const listRef = useRef<HTMLDivElement>(null);
     const messages = useMessages();
@@ -23,8 +24,9 @@ const Messanger = () => {
         if (!inputValue) return;
 
         const time = getCurrentTime();
+
         const newMessage = {
-            author: store.user.userName,
+            author: getUser.userName,
             time,
             message: inputValue,
         };
@@ -93,4 +95,4 @@ const Messanger = () => {
     );
 };
 
-export { Messanger };
+export default observer(Messanger);

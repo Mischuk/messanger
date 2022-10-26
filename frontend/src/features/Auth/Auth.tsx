@@ -1,13 +1,13 @@
-import { useContext, useMemo, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StoreContext } from '../../App';
 import { Button } from '../../components/Button/Button';
 import { User } from '../../models';
 import { Routes } from '../../routes';
+import store from '../../store';
 import { FieldsError } from '../../utils/enum';
 import './Auth.styles.scss';
 import { useAuth } from './useAuth';
-import { useAuthContext } from './useAuthContext';
 
 const Auth = () => {
     const [inputValues, setInputValues] = useState<UserInputValues>({
@@ -16,8 +16,6 @@ const Auth = () => {
     });
 
     const signIn = useAuth();
-    const { signin: fakeSignIn } = useAuthContext();
-    const { updateStore } = useContext(StoreContext);
     let navigate = useNavigate();
 
     const isDisabled = useMemo(
@@ -35,8 +33,7 @@ const Auth = () => {
             onSuccess: (data) => {
                 const user = new User(data);
 
-                updateStore('user', user);
-                fakeSignIn(user, () => {
+                store.logIn(user, () => {
                     navigate(Routes.Messanger, { replace: true });
                 });
             },
@@ -124,4 +121,4 @@ interface UserInputValues {
     password: string;
 }
 
-export { Auth };
+export default observer(Auth);

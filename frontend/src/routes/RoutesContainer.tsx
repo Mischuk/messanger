@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite';
 import {
     Navigate,
     Route,
@@ -6,16 +7,16 @@ import {
 } from 'react-router-dom';
 import { Routes } from '.';
 import { Layout } from '../components/Layout/Layout';
-import { Auth } from '../features/Auth/Auth';
-import { useAuthContext } from '../features/Auth/useAuthContext';
-import { Messanger } from '../features/Messanger/Messanger';
+import Auth from '../features/Auth/Auth';
+import Messanger from '../features/Messanger/Messanger';
 import { NotFound } from '../features/NotFound/NotFound';
+import store from '../store';
 
 function RequireAuth({ children }: { children: JSX.Element }) {
-    let { user } = useAuthContext();
+    const { getAuthorisedStatus } = store;
     let location = useLocation();
 
-    if (!user.userName) {
+    if (!getAuthorisedStatus) {
         return <Navigate to={Routes.Auth} state={{ from: location }} replace />;
     }
 
@@ -41,4 +42,4 @@ const RoutesContainer = () => {
     );
 };
 
-export { RoutesContainer };
+export default observer(RoutesContainer);

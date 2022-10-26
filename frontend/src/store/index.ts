@@ -19,9 +19,10 @@ class Store implements iStore {
         });
     }
 
-    public logIn(data: iUser) {
+    public logIn(data: iUser, cb?: () => void) {
         this.user = new User(data);
         this.isAuthorised = true;
+        cb && cb();
     }
 
     public logOut() {
