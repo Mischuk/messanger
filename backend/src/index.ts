@@ -1,37 +1,41 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
-const server = require('http').createServer(app);
-const WS = require('./core/ws.events');
-const { updateFile, readFile } = require('./core/fs');
-const { PORT } = require('./core/constants');
-const FILENAME_MESSAGES = 'messages.json';
-const dotenv = require('dotenv');
-dotenv.config();
-const cookieParser = require('cookie-parser');
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express from 'express';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import { WS } from './enums/ws.events';
+import RouteAuth from './routes/auth.routes';
+import RouteMessage from './routes/messages.routes';
+import { PORT } from './utils/constants';
+import { readFile, updateFile } from './utils/fs';
 
-const io = require('socket.io')(server, {
+const app = express();
+const httpServer = createServer(app);
+
+const io = new Server(httpServer, {
     cors: {
         origin: ['http://localhost:3000', 'http://192.168.101.103:3000'],
         methods: ['GET', 'POST'],
     },
 });
 
-app.use(express.json({ extended: true }));
+app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 
-app.use('/api/auth', require('./routes/auth.routes'));
-app.use('/api/messages', require('./routes/messages.routes'));
+app.use('/api/auth', RouteAuth);
+app.use('/api/messages', RouteMessage);
+
+const FILENAME_MESSAGES = 'messages.json';
 
 async function start() {
     try {
-        const clients = [];
+        const clients: any[] = [];
 
-        server.listen(PORT);
+        httpServer.listen(PORT);
 
         io.on(WS.CONNECTION, (socket) => {
-            socket.on(WS.FC_CLIENT_CONNECT, async ({ userName }) => {
+            socket.on(WS.FC_CLIENT_CONNECT, async ({ userName }: any) => {
                 const isUserConnected = clients.find(
                     ({ name }) => name === userName
                 );
@@ -46,8 +50,8 @@ async function start() {
                 io.emit(WS.FS_CLIENT_CONNECT, { clients });
             });
 
-            socket.on(WS.FC_NEW_MESSAGE, async (data) => {
-                const messages = await readFile(FILENAME_MESSAGES);
+            socket.on(WS.FC_NEW_MESSAGE, async (data: any) => {
+                const messages: any = await readFile(FILENAME_MESSAGES);
                 messages.data.messages.push(data.newMessage);
                 await updateFile(FILENAME_MESSAGES, messages);
                 io.emit(WS.FS_NEW_MESSAGE, data);
@@ -63,8 +67,7 @@ async function start() {
             });
         });
     } catch (e) {
-        console.log('Server error', e.message);
-        // eslint-disable-next-line no-undef
+        console.log('Server error');
         process.exit(1);
     }
 }

@@ -1,16 +1,18 @@
-const { Router } = require('express');
-const { body, validationResult } = require('express-validator');
-const { STATUS, API_DELAY, SECRET_KEY } = require('../core/constants');
-const bcrypt = require('bcryptjs');
+import bcrypt from 'bcryptjs';
+import { Request, Response, Router } from 'express';
+import { body, validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import { STATUS } from '../enums/status';
+import { API_DELAY, SECRET_KEY } from '../utils/constants';
+
 const { users } = require('../data/users.json');
-const jwt = require('jsonwebtoken');
 
 const router = Router();
 
 router.post(
     '/signin',
     [body(['name', 'password']).isLength({ min: 1 })],
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         try {
             const errors = validationResult(req);
 
@@ -22,7 +24,7 @@ router.post(
 
             const { name, password } = req.body;
 
-            const user = users.find((user) => user.name === name);
+            const user = users.find((user: any) => user.name === name);
 
             if (!user) {
                 return res.status(STATUS.CLIENT_ERROR).json({
@@ -59,4 +61,4 @@ router.post(
     }
 );
 
-module.exports = router;
+export default router;

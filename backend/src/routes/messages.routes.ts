@@ -1,7 +1,8 @@
-const { Router } = require('express');
-const { readFile } = require('../core/fs');
-const { STATUS, API_DELAY } = require('../core/constants');
-const verify = require('../authVerify');
+import { Router } from 'express';
+import { STATUS } from '../enums/status';
+import { authVerify } from '../utils/authVerify';
+import { API_DELAY } from '../utils/constants';
+import { readFile } from '../utils/fs';
 
 const router = Router();
 
@@ -10,7 +11,7 @@ const getMessagesData = async () => {
     return data;
 };
 
-router.get('/', verify, async (req, res) => {
+router.get('/', authVerify, async (_, res) => {
     try {
         const msgs = await getMessagesData();
         setTimeout(() => {
@@ -18,9 +19,9 @@ router.get('/', verify, async (req, res) => {
         }, API_DELAY);
     } catch (error) {
         res.status(STATUS.CLIENT_ERROR).send({
-            message: error.message || 'Something went wrong. Try again.',
+            message: 'Something went wrong. Try again.',
         });
     }
 });
 
-module.exports = router;
+export default router;

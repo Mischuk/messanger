@@ -1,4 +1,4 @@
-const getUniqueID = () => {
+const getUniqueID = (): string => {
     const s4 = () =>
         Math.floor((1 + Math.random()) * 0x10000)
             .toString(16)
@@ -6,6 +6,4 @@ const getUniqueID = () => {
     return s4() + s4() + '-' + s4();
 };
 
-module.exports = {
-    getUniqueID,
-};
+export { getUniqueID };
