@@ -1,9 +1,12 @@
 const express = require('express');
-const path = require('path');
+// const path = require('path');
 const cors = require('cors');
 const app = express();
 const server = require('http').createServer(app);
 const WS = require('./core/ws.events');
+const { updateFile, readFile } = require('./core/fs');
+const { PORT } = require('./core/constants');
+const FILENAME_MESSAGES = 'messages.json';
 
 const io = require('socket.io')(server, {
     cors: {
@@ -12,23 +15,11 @@ const io = require('socket.io')(server, {
     },
 });
 
-const { updateFile, readFile } = require('./core/fs');
-
-const { PORT } = require('./core/constants');
-const FILENAME_MESSAGES = 'messages.json';
-
 app.use(express.json({ extended: true }));
 app.use(cors());
+
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/messages', require('./routes/messages.routes'));
-
-if (process.env.NODE_ENV === 'production') {
-    app.use('/', express.static(path.join(__dirname, 'client', 'build')));
-
-    app.get('*', (_, res) => {
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-    });
-}
 
 async function start() {
     try {
@@ -70,6 +61,7 @@ async function start() {
         });
     } catch (e) {
         console.log('Server error', e.message);
+        // eslint-disable-next-line no-undef
         process.exit(1);
     }
 }

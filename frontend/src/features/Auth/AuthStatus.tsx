@@ -1,19 +1,20 @@
+import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from '../../routes';
+import store from '../../store';
 import './AuthStatus.styles.scss';
-import { useAuthContext } from './useAuthContext';
 
 const AuthStatus = () => {
-    let { user, signout } = useAuthContext();
+    const { logOut, getUser } = store;
     let navigate = useNavigate();
 
     const handleSignOut = () => {
-        signout(() => navigate(Routes.Auth));
+        logOut(() => navigate(Routes.Auth));
     };
 
     return (
         <div className='AuthStatus'>
-            <div className='AuthStatus__name'>Welcome, {user.userName}!</div>
+            <div className='AuthStatus__name'>Welcome, {getUser.userName}!</div>
             <button className='AuthStatus__logout' onClick={handleSignOut}>
                 Sign out
             </button>
@@ -21,4 +22,4 @@ const AuthStatus = () => {
     );
 };
 
-export { AuthStatus };
+export default observer(AuthStatus);

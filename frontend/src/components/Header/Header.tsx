@@ -1,11 +1,11 @@
-import { AuthStatus } from '../../features/Auth/AuthStatus';
-import { useAuthContext } from '../../features/Auth/useAuthContext';
+import { observer } from 'mobx-react-lite';
+import AuthStatus from '../../features/Auth/AuthStatus';
+import store from '../../store';
 import './Header.styles.scss';
-
 const Header = () => {
-    let { user } = useAuthContext();
+    const { isAuthorised } = store;
 
-    if (!user.userName) return null;
+    if (!isAuthorised) return null;
 
     return (
         <div className='Header'>
@@ -14,4 +14,4 @@ const Header = () => {
     );
 };
 
-export { Header };
+export default observer(Header);

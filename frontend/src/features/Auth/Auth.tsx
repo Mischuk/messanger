@@ -33,7 +33,7 @@ const Auth = () => {
             onSuccess: (data) => {
                 const user = new User(data);
 
-                store.logIn(user, () => {
+                store.logIn({ ...user, token: data.token }, () => {
                     navigate(Routes.Messanger, { replace: true });
                 });
             },

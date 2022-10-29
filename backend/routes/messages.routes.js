@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const { readFile } = require('../core/fs');
 const { STATUS, API_DELAY } = require('../core/constants');
-
 const router = Router();
 
 const getMessagesData = async () => {
