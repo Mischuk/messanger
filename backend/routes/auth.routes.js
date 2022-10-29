@@ -22,9 +22,9 @@ router.post(
 
             const { name, password } = req.body;
 
-            const matchedUser = users.find((user) => user.name === name);
+            const user = users.find((user) => user.name === name);
 
-            if (!matchedUser) {
+            if (!user) {
                 return res.status(STATUS.CLIENT_ERROR).json({
                     field: 'name',
                     message: `User ${name} does not exist`,
@@ -33,7 +33,7 @@ router.post(
 
             const isPasswordValid = await bcrypt.compare(
                 password,
-                matchedUser.password
+                user.password
             );
 
             if (!isPasswordValid) {
@@ -44,10 +44,10 @@ router.post(
 
             setTimeout(() => {
                 res.json({
-                    userId: matchedUser.id,
-                    userName: matchedUser.name,
-                    token: jwt.sign({ id: matchedUser.id }, SECRET_KEY, {
-                        expiresIn: '1h',
+                    userId: user.id,
+                    userName: user.name,
+                    token: jwt.sign({ id: user.id }, SECRET_KEY, {
+                        expiresIn: '24h',
                     }),
                 });
             }, API_DELAY);

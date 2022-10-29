@@ -2,6 +2,7 @@ import { action, makeAutoObservable, observable } from 'mobx';
 import { iUser, User } from '../models';
 import { API__USER_AUTH } from '../models/api';
 import { api } from '../utils/axiosInstance';
+import { StorageKeys } from '../utils/enum';
 
 interface iStore {
     user: iUser;
@@ -25,15 +26,15 @@ class Store implements iStore {
         this.user = new User(data);
         this.isAuthorised = true;
         const token = data.token;
-        localStorage.setItem('jwt', token);
-        api.defaults.headers.common = { Authorization: `Bearer ${token}` };
+        localStorage.setItem(StorageKeys.Token, token);
+        api.defaults.headers.common = { Authorization: `${token}` };
         cb && cb();
     }
 
     public logOut(cb?: () => void) {
         this.user = new User();
         this.isAuthorised = false;
-        localStorage.removeItem('jwt');
+        localStorage.removeItem(StorageKeys.Token);
         delete api.defaults.headers.common['Authorization'];
         cb && cb();
     }

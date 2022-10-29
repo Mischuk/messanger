@@ -1,6 +1,7 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect } from 'react';
 import { iUser, User } from '../../models';
-import { fakeAuthProvider } from '../../utils';
+import { StorageKeys } from '../../utils/enum';
+import { useAuth } from './useAuth';
 
 interface AuthContextType {
     user: iUser;
@@ -11,23 +12,13 @@ interface AuthContextType {
 let AuthContext = createContext<AuthContextType>(null!);
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-    let [user, setUser] = useState<iUser>(new User());
+    const signIn = useAuth();
 
-    let signin = (newUser: iUser, callback: VoidFunction) => {
-        return fakeAuthProvider.signin(() => {
-            setUser(newUser);
-            callback();
-        });
-    };
+    useEffect(() => {
+        const token = localStorage.getItem(StorageKeys.Token);
+    }, []);
 
-    let signout = (callback: VoidFunction) => {
-        return fakeAuthProvider.signout(() => {
-            setUser({ userName: '', userId: '' });
-            callback();
-        });
-    };
-
-    let value = { user, signin, signout };
+    let value = { user: new User(), signin: () => {}, signout: () => {} };
 
     return (
         <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

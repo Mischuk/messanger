@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const { readFile } = require('../core/fs');
 const { STATUS, API_DELAY } = require('../core/constants');
+const verify = require('../authVerify');
+
 const router = Router();
 
 const getMessagesData = async () => {
@@ -8,7 +10,7 @@ const getMessagesData = async () => {
     return data;
 };
 
-router.get('/', async (req, res) => {
+router.get('/', verify, async (req, res) => {
     try {
         const msgs = await getMessagesData();
         setTimeout(() => {

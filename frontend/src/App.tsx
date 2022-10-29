@@ -11,12 +11,12 @@ function App() {
     return (
         <div className='App'>
             <QueryClientProvider client={queryClient}>
-                <BrowserRouter>
-                    <AuthProvider>
+                <AuthProvider>
+                    <BrowserRouter>
                         <Header />
                         <RoutesContainer />
-                    </AuthProvider>
-                </BrowserRouter>
+                    </BrowserRouter>
+                </AuthProvider>
             </QueryClientProvider>
         </div>
     );

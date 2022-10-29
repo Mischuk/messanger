@@ -7,6 +7,8 @@ const WS = require('./core/ws.events');
 const { updateFile, readFile } = require('./core/fs');
 const { PORT } = require('./core/constants');
 const FILENAME_MESSAGES = 'messages.json';
+const dotenv = require('dotenv');
+dotenv.config();
 
 const io = require('socket.io')(server, {
     cors: {
