@@ -4,12 +4,8 @@ export interface API__USER_AUTH {
     token: string;
 }
 
-export interface API__MESSAGES {
-    data: {
-        messages: {
-            author: string;
-            message: string;
-            time: string;
-        }[];
-    };
+export interface API__MESSAGE {
+    author: string;
+    message: string;
+    time: string;
 }

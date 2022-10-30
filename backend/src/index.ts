@@ -3,21 +3,18 @@ import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import { ioServerOptions } from './configs/options';
 import { WS } from './enums/ws.events';
+import { ServerClient } from './models/serverClient';
 import RouteAuth from './routes/auth.routes';
 import RouteMessage from './routes/messages.routes';
 import { PORT } from './utils/constants';
-import { readFile, updateFile } from './utils/fs';
+import { updateFile } from './utils/fs';
+const msgs = require('./data/messages.json');
 
 const app = express();
 const httpServer = createServer(app);
-
-const io = new Server(httpServer, {
-    cors: {
-        origin: ['http://localhost:3000', 'http://192.168.101.103:3000'],
-        methods: ['GET', 'POST'],
-    },
-});
+const io = new Server(httpServer, ioServerOptions);
 
 app.use(express.json());
 app.use(cors());
@@ -26,33 +23,29 @@ app.use(cookieParser());
 app.use('/api/auth', RouteAuth);
 app.use('/api/messages', RouteMessage);
 
-const FILENAME_MESSAGES = 'messages.json';
-
 async function start() {
     try {
-        const clients: any[] = [];
+        const clients: ServerClient[] = [];
 
         httpServer.listen(PORT);
 
+        // TODO: encaplusate ws logic to a separated files
         io.on(WS.CONNECTION, (socket) => {
             socket.on(WS.FC_CLIENT_CONNECT, async ({ userName }: any) => {
-                const isUserConnected = clients.find(
-                    ({ name }) => name === userName
-                );
-
-                if (!isUserConnected) {
+                const user = clients.find(({ name }) => name === userName);
+                if (!user) {
                     clients.push({
                         name: userName,
                         id: socket.id,
                     });
                 }
-
                 io.emit(WS.FS_CLIENT_CONNECT, { clients });
             });
 
             socket.on(WS.FC_NEW_MESSAGE, async (data: any) => {
-                const messages: any = await readFile(FILENAME_MESSAGES);
-                messages.data.messages.push(data.newMessage);
+                const FILENAME_MESSAGES = 'messages.json';
+                const messages: any = [...msgs.data.messages];
+                messages.push(data.newMessage);
                 await updateFile(FILENAME_MESSAGES, messages);
                 io.emit(WS.FS_NEW_MESSAGE, data);
             });

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { QueryClient } from 'react-query';
 
 const axiosInstance = axios.create({
     baseURL: `http://localhost:8000/api`,
@@ -17,4 +18,17 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-export { axiosInstance as api };
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+            staleTime: 0,
+            refetchOnMount: false,
+            refetchOnReconnect: false,
+            refetchInterval: false,
+            retry: 0,
+        },
+    },
+});
+
+export { axiosInstance as api, queryClient };

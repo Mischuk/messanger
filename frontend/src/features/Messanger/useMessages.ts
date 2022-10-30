@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { iMessage } from '../../models';
-import { API__MESSAGES } from '../../models/api';
-import { api } from '../../utils/axiosInstance';
+import { api } from '../../api/instances';
+import { API__MESSAGE } from '../../models/api';
+import { iMessage } from '../../models/message';
 import { abortController } from '../../utils/cancelableRequest';
 
 let controller: AbortController;
@@ -10,21 +10,18 @@ let controller: AbortController;
 const getMessages = async (): Promise<iMessage[]> => {
     controller = abortController(controller);
 
-    const { data: response } = await api.get<API__MESSAGES>('/messages', {
-        signal: controller.signal,
-    });
-
-    return response.data.messages;
+    const response = await api.get<API__MESSAGE[]>('/messages');
+    return response.data;
 };
 
 const useMessages = () => {
-    const query = useQuery('getMessages', getMessages, {
-        initialData: [] as iMessage[],
-    });
+    const query = useQuery(['getMessages'], getMessages);
     const [messages, setMessages] = useState<iMessage[]>([]);
 
-    const addMessages = (data: iMessage[]) =>
-        setMessages((prev) => [...prev, ...data]);
+    const addMessages = useCallback(
+        (data: iMessage[]) => setMessages((prev) => [...prev, ...data]),
+        []
+    );
 
     useEffect(() => {
         if (query.data) {
@@ -32,15 +29,12 @@ const useMessages = () => {
         }
     }, [query.data]);
 
-    return useMemo(
-        () => ({
-            ...query,
-            data: messages,
-            addMessages,
-            abort: () => controller.abort(),
-        }),
-        [messages, query]
-    );
+    return {
+        ...query,
+        data: messages,
+        addMessages,
+        abort: () => controller.abort(),
+    };
 };
 
 export { useMessages };

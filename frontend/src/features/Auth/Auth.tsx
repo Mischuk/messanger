@@ -1,39 +1,39 @@
-import { observer } from 'mobx-react-lite';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button/Button';
-import { User } from '../../models';
+import { User } from '../../models/user';
 import { Routes } from '../../routes';
-import store from '../../store';
 import { FieldsError } from '../../utils/enum';
 import './Auth.styles.scss';
-import { useAuth } from './useAuth';
+import { useAuthContext } from './hooks/useAuthContext';
+import { useAuthQuery } from './hooks/useAuthQuery';
 
 const Auth = () => {
     const [inputValues, setInputValues] = useState<UserInputValues>({
-        name: '',
-        password: '',
+        name: 'user a',
+        password: 'qwerty',
     });
 
-    const signIn = useAuth();
+    const auth = useAuthQuery();
+    const { signIn } = useAuthContext();
     let navigate = useNavigate();
 
     const isDisabled = useMemo(
         () =>
-            signIn.isLoading ||
+            auth.isLoading ||
             inputValues.name === '' ||
             inputValues.password === '',
-        [inputValues, signIn.isLoading]
+        [inputValues, auth.isLoading]
     );
 
     const handleSignIn = () => {
         if (isDisabled) return;
 
-        signIn.mutate(inputValues, {
+        auth.mutate(inputValues, {
             onSuccess: (data) => {
                 const user = new User(data);
 
-                store.logIn({ ...user, token: data.token }, () => {
+                signIn({ ...user, token: data.token }, () => {
                     navigate(Routes.Messanger, { replace: true });
                 });
             },
@@ -44,7 +44,7 @@ const Auth = () => {
     };
 
     const handleChangeInput = (key: keyof UserInputValues, value: string) => {
-        signIn.reset();
+        auth.reset();
 
         setInputValues((prev) => ({
             ...prev,
@@ -62,12 +62,9 @@ const Auth = () => {
         <div className='Auth'>
             <div className='Auth__form'>
                 <div className='Auth__column'>
-                    {signIn.error &&
-                        signIn.error.field === FieldsError.Name && (
-                            <div className='Auth__error'>
-                                {signIn.error.message}
-                            </div>
-                        )}
+                    {auth.error && auth.error.field === FieldsError.Name && (
+                        <div className='Auth__error'>{auth.error.message}</div>
+                    )}
                     <input
                         type='text'
                         placeholder='Your name...'
@@ -78,14 +75,14 @@ const Auth = () => {
                             handleChangeInput('name', e.target.value)
                         }
                         onKeyUp={handleEnter}
-                        disabled={signIn.isLoading}
+                        disabled={auth.isLoading}
                     />
                 </div>
                 <div className='Auth__column'>
-                    {signIn.error &&
-                        signIn.error.field === FieldsError.Password && (
+                    {auth.error &&
+                        auth.error.field === FieldsError.Password && (
                             <div className='Auth__error'>
-                                {signIn.error.message}
+                                {auth.error.message}
                             </div>
                         )}
                     <input
@@ -98,14 +95,14 @@ const Auth = () => {
                             handleChangeInput('password', e.target.value)
                         }
                         onKeyUp={handleEnter}
-                        disabled={signIn.isLoading}
+                        disabled={auth.isLoading}
                     />
                 </div>
 
                 <div className='Auth__submit'>
                     <Button
                         onClick={handleSignIn}
-                        isLoading={signIn.isLoading}
+                        isLoading={auth.isLoading}
                         disabled={isDisabled}
                     >
                         Ok
@@ -121,4 +118,4 @@ interface UserInputValues {
     password: string;
 }
 
-export default observer(Auth);
+export default Auth;

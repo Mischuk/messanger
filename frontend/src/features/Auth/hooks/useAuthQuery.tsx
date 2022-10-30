@@ -1,9 +1,9 @@
 import { useMutation } from 'react-query';
-import { API__USER_AUTH } from '../../models/api';
-import { api } from '../../utils/axiosInstance';
-import { abortController } from '../../utils/cancelableRequest';
-import { FieldsError } from '../../utils/enum';
-import { ErrorResponse } from '../../utils/types';
+import { api } from '../../../api/instances';
+import { API__USER_AUTH } from '../../../models/api';
+import { abortController } from '../../../utils/cancelableRequest';
+import { FieldsError } from '../../../utils/enum';
+import { ErrorResponse } from '../../../utils/types';
 
 let controller: AbortController;
 
@@ -23,7 +23,7 @@ const auth = async (data: AuthArgs): Promise<API__USER_AUTH> => {
     return response;
 };
 
-const useAuth = () => {
+const useAuthQuery = () => {
     return {
         ...useMutation<
             API__USER_AUTH,
@@ -34,4 +34,4 @@ const useAuth = () => {
     };
 };
 
-export { useAuth };
+export { useAuthQuery };

@@ -1,24 +1,24 @@
-import { observer } from 'mobx-react-lite';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '../../components/Button/Button';
 import { socket } from '../../socket';
-import store from '../../store';
 import { getCurrentTime } from '../../utils/helpers';
 import WS from '../../utils/ws.events';
+import { useAuthContext } from '../Auth/hooks/useAuthContext';
 import './Messanger.styles.scss';
 import { useMessages } from './useMessages';
 
 const Messanger = () => {
-    const { getUser } = store;
     const [inputValue, setInputValue] = useState('');
     const listRef = useRef<HTMLDivElement>(null);
-    const messages = useMessages();
+    const { data, addMessages } = useMessages();
+    const { user } = useAuthContext();
+    console.log(`data: `, data);
 
     useEffect(() => {
         socket.on(WS.FS_NEW_MESSAGE, ({ newMessage }) => {
-            messages.addMessages([newMessage]);
+            addMessages([newMessage]);
         });
-    }, [messages]);
+    }, [addMessages]);
 
     const handleSubmit = () => {
         if (!inputValue) return;
@@ -26,7 +26,7 @@ const Messanger = () => {
         const time = getCurrentTime();
 
         const newMessage = {
-            author: getUser.userName,
+            author: user.userName,
             time,
             message: inputValue,
         };
@@ -47,18 +47,11 @@ const Messanger = () => {
         setInputValue(value);
     };
 
-    useEffect(() => {
-        const el = listRef.current;
-        if (el) {
-            el.scrollTo(0, el.offsetHeight);
-        }
-    }, [messages.data]);
-
     return (
         <div className='Messanger'>
             <div className='Messanger__list' ref={listRef}>
-                {messages.data &&
-                    messages.data.map((msg, idx) => {
+                {data &&
+                    data.map((msg, idx) => {
                         return (
                             <div className='Messanger__item' key={idx}>
                                 <div className='Messanger__item-wrapper'>
@@ -95,4 +88,4 @@ const Messanger = () => {
     );
 };
 
-export default observer(Messanger);
+export default Messanger;
