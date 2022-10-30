@@ -1,6 +1,10 @@
 import axios from 'axios';
 import { QueryClient } from 'react-query';
+import { io } from 'socket.io-client';
 
+/*
+    AXIOS
+*/
 const axiosInstance = axios.create({
     baseURL: `http://localhost:8000/api`,
 });
@@ -18,6 +22,9 @@ axiosInstance.interceptors.response.use(
     }
 );
 
+/*
+    REACT QUERY
+*/
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
@@ -31,4 +38,9 @@ const queryClient = new QueryClient({
     },
 });
 
-export { axiosInstance as api, queryClient };
+/*
+    WEBSOCKET
+*/
+const socket = io('http://localhost:8000');
+
+export { axiosInstance as api, queryClient, socket };

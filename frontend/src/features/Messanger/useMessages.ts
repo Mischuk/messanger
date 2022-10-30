@@ -1,9 +1,9 @@
+import { api } from '@api';
+import { API__MESSAGE } from '@models/api';
+import { iMessage } from '@models/message';
+import { abortController } from '@utils/cancelableRequest';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { api } from '../../api/instances';
-import { API__MESSAGE } from '../../models/api';
-import { iMessage } from '../../models/message';
-import { abortController } from '../../utils/cancelableRequest';
 
 let controller: AbortController;
 

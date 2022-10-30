@@ -1,9 +1,9 @@
+import { api } from '@api';
+import { API__USER_AUTH } from '@models/api';
+import { User } from '@models/user';
+import { StorageKeys } from '@utils/enum';
 import { createContext } from 'react';
 import { useRecoilState } from 'recoil';
-import { api } from '../../api/instances';
-import { API__USER_AUTH } from '../../models/api';
-import { User } from '../../models/user';
-import { StorageKeys } from '../../utils/enum';
 import { AuthState, AuthStateInitial, iStore } from './Auth.store';
 
 interface AuthContextType extends iStore {

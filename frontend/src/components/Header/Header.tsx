@@ -1,12 +1,11 @@
-import { useContext } from 'react';
+import { useAuthContext } from '@features/Auth/hooks/useAuthContext';
+import { Routes } from '@utils/enum';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../features/Auth/Auth.context';
-import { Routes } from '../../routes';
 import './Header.styles.scss';
 
 const Header = () => {
     let navigate = useNavigate();
-    const { signOut, user, isAuth } = useContext(AuthContext);
+    const { signOut, user, isAuth } = useAuthContext();
 
     const handleSignOut = () => signOut(() => navigate(Routes.Auth));
 
@@ -29,4 +28,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export { Header };

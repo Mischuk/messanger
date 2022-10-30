@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "paths": {
+            "@components/*": ["./components/*"],
+            "@features/*": ["./features/*"],
+            "@models/*": ["./models/*"],
+            "@routes/*": ["./routes/*"],
+            "@utils/*": ["./utils/*"],
+            "@styles": ["./assets/variables.scss"],
+            "@api": ["./api/instances"]
+        }
+    }
+}

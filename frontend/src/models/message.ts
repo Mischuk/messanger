@@ -1,4 +1,4 @@
-import { getCurrentTime } from '../utils/helpers';
+import { getCurrentTime } from '@utils/helpers';
 
 export interface iMessage {
     author: string;

@@ -1,5 +1,5 @@
-@import './assets/variables.scss';
-
+@import '@styles';
+// TODO: replace with @use in all style files
 .App {
     display: flex;
     align-items: center;

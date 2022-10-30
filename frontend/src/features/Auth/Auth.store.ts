@@ -1,5 +1,5 @@
+import { iUser, User } from '@models/user';
 import { atom } from 'recoil';
-import { iUser, User } from '../../models/user';
 
 export interface iStore {
     user: iUser;

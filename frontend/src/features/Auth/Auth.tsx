@@ -1,9 +1,8 @@
+import { Button } from '@components/Button/Button';
+import { User } from '@models/user';
+import { FieldsError, Routes } from '@utils/enum';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../../components/Button/Button';
-import { User } from '../../models/user';
-import { Routes } from '../../routes';
-import { FieldsError } from '../../utils/enum';
 import './Auth.styles.scss';
 import { useAuthContext } from './hooks/useAuthContext';
 import { useAuthQuery } from './hooks/useAuthQuery';

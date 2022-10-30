@@ -1,9 +1,9 @@
+import { socket } from '@api';
+import { Button } from '@components/Button/Button';
+import { useAuthContext } from '@features/Auth/hooks/useAuthContext';
+import { getCurrentTime } from '@utils/helpers';
+import WS from '@utils/ws.events';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '../../components/Button/Button';
-import { socket } from '../../socket';
-import { getCurrentTime } from '../../utils/helpers';
-import WS from '../../utils/ws.events';
-import { useAuthContext } from '../Auth/hooks/useAuthContext';
 import './Messanger.styles.scss';
 import { useMessages } from './useMessages';
 

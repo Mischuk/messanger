@@ -1,9 +1,9 @@
+import { api } from '@api';
+import { API__USER_AUTH } from '@models/api';
+import { abortController } from '@utils/cancelableRequest';
+import { FieldsError } from '@utils/enum';
+import { ErrorResponse } from '@utils/types';
 import { useMutation } from 'react-query';
-import { api } from '../../../api/instances';
-import { API__USER_AUTH } from '../../../models/api';
-import { abortController } from '../../../utils/cancelableRequest';
-import { FieldsError } from '../../../utils/enum';
-import { ErrorResponse } from '../../../utils/types';
 
 let controller: AbortController;
 
