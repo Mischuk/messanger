@@ -15,7 +15,7 @@ function updateFile(filename: string, data: any) {
     });
 }
 
-function readFile(filename: string) {
+function readFile<T>(filename: string): Promise<T> {
     return new Promise((resolve, reject) => {
         fs.readFile(
             path.resolve(__dirname, '..', 'data', filename),

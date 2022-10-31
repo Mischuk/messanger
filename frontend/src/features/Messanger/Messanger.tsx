@@ -12,7 +12,6 @@ const Messanger = () => {
     const listRef = useRef<HTMLDivElement>(null);
     const { data, addMessages } = useMessages();
     const { user } = useAuthContext();
-    console.log(`data: `, data);
 
     useEffect(() => {
         socket.on(WS.FS_NEW_MESSAGE, ({ newMessage }) => {

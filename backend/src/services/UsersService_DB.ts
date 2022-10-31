@@ -1,6 +1,6 @@
 import { UserModel } from '../models/UserModel';
 import { prepareString } from '../utils';
-import { updateFile } from '../utils/fs';
+import { readFile, updateFile } from '../utils/fs';
 
 const file = require('../data/newUsers.json');
 
@@ -15,11 +15,18 @@ class UsersService_DB implements UsersServicesDB {
         return this.users;
     }
 
-    public findOne(
+    public async getUsersAsync(): Promise<UserModel[]> {
+        const { data } = await readFile<{
+            data: UserModel[];
+        }>('newUsers.json');
+        return data;
+    }
+
+    public async findOne(
         field: keyof UserModel,
         name: string
-    ): UserModel | undefined {
-        const users = this.getUsers();
+    ): Promise<UserModel | undefined> {
+        const users = await this.getUsersAsync();
         return users.find(
             (user) => prepareString(user[field]) === prepareString(name)
         );

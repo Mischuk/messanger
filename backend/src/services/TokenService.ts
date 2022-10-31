@@ -47,7 +47,7 @@ class TokenService {
         }
 
         const tokenId = uuidv4();
-        const user = Users.findOne('id', userId);
+        const user = await Users.findOne('id', userId);
 
         if (!user) throw new Error(`UserId ${userId} does not exist`);
 

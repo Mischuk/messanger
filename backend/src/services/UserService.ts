@@ -7,7 +7,7 @@ const Users = new UsersService_DB();
 
 class UserService {
     async signUp(data: { name: string; password: string }) {
-        const isUserExist = Users.findOne('name', data.name);
+        const isUserExist = await Users.findOne('name', data.name);
 
         if (isUserExist) throw new Error(`User "${data.name}" already exist`);
 
