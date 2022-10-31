@@ -4,6 +4,7 @@ enum STATUS {
     CREATED = 201,
     REDIRECT = 300,
     CLIENT_ERROR = 400,
+    UNAUTHORISED_USER = 401,
     SERVER_ERROR = 500,
 }
 

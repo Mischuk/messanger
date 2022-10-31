@@ -6,12 +6,14 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { ioServerOptions } from './configs/options';
 import { WS } from './enums/ws.events';
+import errorMiddlewave from './middlewares/error';
 import { ServerClient } from './models/serverClient';
 import newRouteAuth from './routes/auth';
 import RouteAuth from './routes/auth.routes';
 import RouteMessage from './routes/messages.routes';
 import { PORT } from './utils/constants';
 import { updateFile } from './utils/fs';
+
 dotenv.config();
 
 const msgs = require('./data/messages.json');
@@ -27,6 +29,8 @@ app.use(cookieParser());
 app.use('/api/auth', RouteAuth);
 app.use('/api/messages', RouteMessage);
 app.use('/api', newRouteAuth);
+
+app.use(errorMiddlewave); // require last in chain
 
 async function start() {
     try {

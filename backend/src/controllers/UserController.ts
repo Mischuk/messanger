@@ -15,31 +15,39 @@ class UserController {
                 maxAge: d30,
                 httpOnly: true,
             });
-            return res.json({ a: userData });
+            return res.json(userData);
         } catch (error) {
-            console.log(error);
+            next(error);
         }
     }
 
     async signIn(req: Request, res: Response, next: NextFunction) {
         try {
-        } catch (error) {}
+        } catch (error) {
+            next(error);
+        }
     }
 
     async signOut(req: Request, res: Response, next: NextFunction) {
         try {
-        } catch (error) {}
+        } catch (error) {
+            next(error);
+        }
     }
 
     async refresh(req: Request, res: Response, next: NextFunction) {
         try {
-        } catch (error) {}
+        } catch (error) {
+            next(error);
+        }
     }
 
     async getUsers(req: Request, res: Response, next: NextFunction) {
         try {
             res.json([{ a: 1 }]);
-        } catch (error) {}
+        } catch (error) {
+            next(error);
+        }
     }
 }
 
