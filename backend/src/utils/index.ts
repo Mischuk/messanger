@@ -7,3 +7,5 @@ const getUniqueID = (): string => {
 };
 
 export { getUniqueID };
+
+export const prepareString = (str: string): string => str.toLowerCase().trim();
